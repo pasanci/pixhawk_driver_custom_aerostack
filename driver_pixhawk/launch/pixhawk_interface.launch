@@ -1,0 +1,109 @@
+<!-- Launches: pixhawk_interface -->
+<launch>
+	
+	<arg name = "namespace"					        default = "drone1"/>
+	<arg name = "simulation_mode" 					default = "True" />
+	<arg name = "acro_mode" 					    default = "False"/>
+	<arg name="tgt_system" default="1" />
+    <arg name="tgt_component" default="1"/>
+
+	<!-- State interface  Node -->
+    <arg name ="mavros_battery_topic"		        default = "mavros/battery" />
+    <arg name ="mavros_imu_topic"				    default = "mavros/imu/data" />
+	<arg name ="mavros_altitude_topic"		    	default = "mavros/altitude" />
+    <arg name ="mavros_magnetometer_topic"	    	default = "mavros/imu/mag" />
+	<arg name ="mavros_odom_topic"			    	default = "mavros/local_position/odom" />
+	
+    <arg name ="aerostack_estimated_pose_topic"   	default = "self_localization/pose" />
+	<arg name ="aerostack_estimated_speed_topic"  	default = "self_localization/speed" />
+    <arg name ="aerostack_battery_topic"          	default = "sensor_measurement/battery_state" />
+    <arg name ="aerostack_imu_topic"              	default = "sensor_measurement/imu" />
+    <arg name ="aerostack_altitude_topic"         	default = "sensor_measurement/altitude" />
+    <arg name ="aerostack_magnetometer_topic"     	default = "sensor_measurement/magnetometer" />
+    <arg name ="aerostack_odom_topic"             	default = "sensor_measurement/odometry" />
+    <arg name ="aerostack_linear_speed_topic"     	default = "sensor_measurement/linear_speed" />
+    <arg name ="aerostack_rotation_angles_topic"  	default = "sensor_measuremet/rotation_angles" />
+    <arg name ="aerostack_flight_state_topic"     	default = "self_localization/flight_state" />
+
+	<!-- Command interface Node -->
+
+    <arg name = "aerostack_flight_action_command_topic"               	default = "actuator_command/flight_action" />
+	<arg name = "aerostack_roll_pitch_yaw_rate_thrust_command_topic"  	default = "actuator_command/roll_pitch_yaw_rate_thrust" />
+    <arg name = "aerostack_altitude_rate_yaw_rate_command_topic"       	default = "actuator_command/altitude_rate_yaw_rate" />
+	<arg name = "aerostack_thottle_command_topic"                    	default = "actuator_command/throttle" />
+
+    <arg name = "mavros_state_topic"                 				    default = "mavros/state" />
+    <arg name = "mavros_attitude_command_topic"    						default = "mavros/setpoint_attitude/attitude" />
+	<arg name = "mavros_cmd_vel_command_topic"     						default = "mavros/setpoint_attitude/cmd_vel" />
+	<arg name = "mavros_thrust_command_topic"      						default = "mavros/setpoint_attitude/thrust" />
+	<arg name = "mavros_arming_service"            						default = "mavros/cmd/arming" />
+	<arg name = "mavros_takeoff_service"           						default = "mavros/cmd/takeoff" />
+	<arg name = "mavros_landing_service"           						default = "mavros/cmd/landing" />
+	<arg name = "mavros_set_mode_service"          						default = "mavros/set_mode" />
+
+	<arg name = "mavros_vision_pose_topic"          					default = "mavros/vision_pose/pose" />
+
+
+	<arg name = "fcu_url"    default = "/dev/ttyACM0:57600"  if="$(eval arg('simulation_mode') == False)"/> 
+	<arg name = "fcu_url"    default = "udp://:14540@192.168.1.36:14557"  if="$(eval arg('simulation_mode') == True)"/> 
+	<arg name ="config_yaml" value = "$(find pixhawk_interface)/configs/px4_attitude_config.yaml" if="$(eval arg('acro_mode') == False)"/>
+	<arg name ="config_yaml" value = "$(find pixhawk_interface)/configs/px4_acro_config.yaml" if="$(eval arg('acro_mode') == True)"/>
+
+ 
+	<include file="$(find pixhawk_interface)/launch/px4.launch">
+		<arg name = "config_yaml"  value = "$(arg config_yaml)"/>
+		<arg name = "fcu_url"  value = "$(arg fcu_url)" />
+		<arg name = "namespace"  value = "$(arg namespace)" />
+        <arg name="gcs_url" value=""/>
+		<arg name="tgt_system" value="$(arg tgt_system)"/>
+        <arg name="tgt_component" value="1"/>
+    </include>
+    
+	<group ns="$(arg namespace)">
+
+		<param name = "~namespace"                        	value = "$(arg namespace)"                       	type = "str" />
+		<param name ="~simulation_mode"						value = "$(arg simulation_mode)"					type = "bool" />
+		<param name ="~acro_mode"							value = "$(arg acro_mode)"							type = "bool" />
+
+
+		<param name= "~mavros_battery_topic"		    	value = "$(arg mavros_battery_topic)" 				type="str" />
+		<param name= "~mavros_imu_topic"					value = "$(arg mavros_imu_topic)" 					type="str" />
+		<param name= "~mavros_altitude_topic"		    	value = "$(arg mavros_altitude_topic)" 				type="str" />
+		<param name= "~mavros_magnetometer_topic"	    	value = "$(arg mavros_magnetometer_topic)" 			type="str" />
+		<param name= "~mavros_odom_topic"			    	value = "$(arg mavros_odom_topic)" 					type="str" />
+
+		<param name= "~aerostack_estimated_pose_topic"  	value = "$(arg aerostack_estimated_pose_topic)" 	type="str" />
+		<param name= "~aerostack_battery_topic"          	value = "$(arg aerostack_battery_topic)" 			type="str" />
+		<param name= "~aerostack_imu_topic"              	value = "$(arg aerostack_imu_topic)" 				type="str" />
+		<param name= "~aerostack_altitude_topic"         	value = "$(arg aerostack_altitude_topic)" 			type="str" />
+		<param name= "~aerostack_magnetometer_topic"     	value = "$(arg aerostack_magnetometer_topic)" 		type="str" />
+		<param name= "~aerostack_odom_topic"             	value = "$(arg aerostack_odom_topic)" 				type="str" />
+		<param name= "~aerostack_linear_speed_topic"     	value = "$(arg aerostack_linear_speed_topic)" 		type="str" />
+		<param name= "~aerostack_rotation_angles_topic"  	value = "$(arg aerostack_rotation_angles_topic)" 	type="str" />
+		<param name= "~aerostack_flight_state_topic"     	value = "$(arg aerostack_flight_state_topic)" 		type="str" />
+
+
+		<param name ="~aerostack_flight_action_command_topic"               	value = "$(arg aerostack_flight_action_command_topic)"             		type = "str" />
+		<param name ="~mavros_state_topic"                 				    	value = "$(arg mavros_state_topic)"                                		type = "str" />
+		<param name ="~aerostack_roll_pitch_yaw_rate_thrust_command_topic"  	value = "$(arg aerostack_roll_pitch_yaw_rate_thrust_command_topic)"		type = "str" />
+		<param name ="~aerostack_altitude_rate_yaw_rate_command_topic"       	value = "$(arg aerostack_altitude_rate_yaw_rate_command_topic)"    		type = "str" />
+		<param name ="~aerostack_thottle_command_topic"                    		value = "$(arg aerostack_thottle_command_topic)"                   		type = "str" />
+		
+		<param name ="~mavros_attitude_command_topic"    						value = "$(arg mavros_attitude_command_topic)"    						type = "str" />
+		<param name ="~mavros_cmd_vel_command_topic"     						value = "$(arg mavros_cmd_vel_command_topic)"     						type = "str" />
+		<param name ="~mavros_thrust_command_topic"      						value = "$(arg mavros_thrust_command_topic)"      						type = "str" />
+		<param name ="~mavros_arming_service"            						value = "$(arg mavros_arming_service)"            						type = "str" />
+		<param name ="~mavros_takeoff_service"           						value = "$(arg mavros_takeoff_service)"           						type = "str" />
+		<param name ="~mavros_landing_service"           						value = "$(arg mavros_landing_service)"           						type = "str" />
+		<param name ="~mavros_set_mode_service"          						value = "$(arg mavros_set_mode_service)"          						type = "str" />
+
+		<param name ="~mavros_vision_pose_topic"          						value = "$(arg mavros_vision_pose_topic)"          						type = "str" />
+
+        
+		<!-- pixhawk_command_interface -->
+		<node name="pixhawk_command_interface" pkg="pixhawk_interface" type="pixhawk_interface_command_node"  output="screen"/>
+		<!-- pixhawk_state_interface -->
+		<node name="pixhawk_state_interface" pkg="pixhawk_interface" type="pixhawk_interface_state_node"  output="screen"/>
+		
+	</group>
+</launch>

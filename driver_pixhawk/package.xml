@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>pixhawk_interface</name>
+  <version>0.0.1</version>
+  <description>The pixhawk interface package</description>
+
+  <author email="miguel.fernandez.cortizas@upm.es"> Miguel Fernandez Cortizas </author>
+  <maintainer email="miguel.fernandez.cortizas@upm.es"> Miguel Fernandez Cortizas</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend> 
+  <depend>mav_msgs</depend>
+  <depend>mavros</depend>
+  <depend>mavros_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>robot_process</depend>
+  <depend>aerostack_msgs</depend>
+  <depend>ros_utils_lib</depend>
+  
+
+  <license>BSD-3</license>
+
+</package>

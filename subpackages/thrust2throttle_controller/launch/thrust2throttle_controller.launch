@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name= "uav_mass"                           default = "1.5" />
+    <arg name= "namespace"					        default = "drone1"/>
+    <!-- <arg name= "estimated_pose_topic" 	            default = "self_localization/pose"/> -->
+    <arg name= "imu_topic"	                        default = "sensor_measurement/imu"/>
+    <arg name= "throttle_topic"               	    default = "actuator_command/throttle"/>
+    <arg name= "thrust_topic"					    default = "actuator_command/thrust"/> 
+
+    <group ns="$(arg namespace)">
+        <param name= "~uav_mass"                         value="$(arg uav_mass)" />
+        <param name= "~namespace"                        value="$(arg namespace)"                       type="str" />
+        <!-- <param name= "~estimated_pose_topic"             value="$(arg estimated_pose_topic)"            type="str" /> -->
+        <param name= "~imu_topic"                        value="$(arg imu_topic)"                       type="str" />
+        <param name= "~throttle_topic"                   value="$(arg throttle_topic)"                  type="str" />
+        <param name= "~thrust_topic"                     value="$(arg thrust_topic)"                    type="str" />
+        <node name="thrust2throttle_controller" pkg="thrust2throttle_controller" type="thrust2throttle_controller_node" output="screen"/>
+
+    </group>
+
+</launch>
+
