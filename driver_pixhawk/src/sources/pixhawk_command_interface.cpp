@@ -105,12 +105,6 @@ void CommandInterface::checkOffboardMode(){
             }
             last_request = ros::Time::now();
         }
-        if (current_state_.armed){
-            ROS_INFO("Vehicle is already armed");
-        }
-        else{
-            ROS_INFO("Vehicle is already disarmed");
-        }
     }
 }
 
@@ -216,19 +210,20 @@ bool CommandInterface::armVehicle(const bool& _value){
 
     mavros_msgs::CommandBool arm_cmd;
     arm_cmd.request.value = _value;
-    
-    if(arming_client_.call(arm_cmd) && arm_cmd.response.success){
-        if(_value)
-            ROS_INFO("Vehicle armed");
-        else
-            ROS_INFO("Vehicle disarmed");
-        return true;
-    }
-    else{
-        if(_value)
-            ROS_WARN("ERROR arming vehicle");
-        else
-            ROS_WARN("ERROR disarming vehicle");
+    if(current_state_.mode == "OFFBOARD"){
+        if(arming_client_.call(arm_cmd) && arm_cmd.response.success){
+            if(_value)
+                ROS_INFO("Vehicle armed");
+            else
+                ROS_INFO("Vehicle disarmed");
+            return true;
+        }
+        else{
+            if(_value)
+                ROS_WARN("ERROR arming vehicle");
+            else
+                ROS_WARN("ERROR disarming vehicle");
+        }
     }
     
     return false;
